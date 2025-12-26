@@ -1,0 +1,290 @@
+================================================================================
+RENEWABLE ENERGY HARDWARE ENTERPRISE SYSTEM - CODE STRUCTURE
+================================================================================
+
+PROJECT OVERVIEW
+================================================================================
+This is a Java Swing desktop application for enterprise management of renewable
+energy hardware businesses. It supports multi-role user access with separate
+dashboards for Admin, Company Admin, Technician, and Customer roles.
+
+Technologies:
+- Java SE 11+
+- Java Swing (GUI)
+- H2 Database (Embedded, version 2.2.224)
+- CSV Import/Export functionality
+
+================================================================================
+PROJECT STRUCTURE
+================================================================================
+
+Final Project/
+├── app/
+│   ├── Main.java                          # Application entry point
+│   ├── IntroInterface.java                # Welcome/intro screen
+│   ├── LoginFrame.java                    # Unified login for all user types
+│   ├── DashboardFrame.java                # Admin dashboard
+│   ├── CompanyAdminFrame.java             # Company Admin dashboard
+│   ├── TechnicianFrame.java               # Technician dashboard
+│   ├── CustomerPortal.java                # Customer portal
+│   ├── DataStore.java                     # Data storage utilities
+│   │
+│   ├── abstracts/
+│   │   ├── BaseUser.java                  # Abstract base class for all users
+│   │   └── BaseFrame.java                 # Abstract base class for frames
+│   │
+│   ├── interfaces/
+│   │   ├── Authenticatable.java           # Authentication interface
+│   │   └── DataManageable.java            # CRUD operations interface
+│   │
+│   ├── model/
+│   │   ├── Admin.java                     # Admin user model
+│   │   ├── CompanyAdmin.java              # Company Admin user model
+│   │   ├── Technician.java                # Technician user model
+│   │   ├── Customer.java                  # Customer user model
+│   │   ├── StockItem.java                 # Inventory item model
+│   │   └── SupplierQuote.java             # Supplier quote model
+│   │
+│   └── util/
+│       ├── DatabaseConnection.java        # Database connection singleton
+│       ├── DatabaseInitializer.java       # Database schema initialization
+│       ├── CSVUtil.java                   # CSV import/export utilities
+│       ├── UIStyles.java                  # UI styling utilities
+│       ├── UserManager.java               # User management utilities
+│       │
+│       ├── AdminDAO.java                   # Admin data access object
+│       ├── CompanyAdminDAO.java           # Company Admin DAO
+│       ├── TechnicianDAO.java             # Technician DAO
+│       ├── CustomerDAO.java               # Customer DAO
+│       ├── SalesOrderDAO.java             # Sales orders DAO
+│       ├── InventoryDAO.java              # Inventory DAO
+│       ├── SupplierDAO.java               # Suppliers DAO
+│       ├── MaintenanceDAO.java            # Maintenance requests DAO
+│       ├── StockRequestDAO.java           # Stock requests DAO
+│       ├── StockArrivalDAO.java           # Stock arrivals DAO
+│       ├── ScheduleDAO.java               # Schedules DAO
+│       ├── TechnicianJobDAO.java          # Technician jobs DAO
+│       ├── PartsRequestDAO.java           # Parts requests DAO
+│       ├── TechnicianIssueDAO.java        # Technician issues DAO
+│       └── CustomerIssueDAO.java          # Customer issues DAO
+│
+├── lib/
+│   └── h2-2.2.224.jar                     # H2 Database JAR file
+│
+├── database_schema_h2.sql                 # Database schema SQL
+├── init_database.sql                      # Database initialization script
+├── sample_data.sql                        # Sample data for testing
+└── PROJECT_DOCUMENTATION.md               # Complete project documentation
+
+================================================================================
+KEY COMPONENTS
+================================================================================
+
+1. MAIN ENTRY POINT
+   - Main.java: Initializes database connection and launches IntroInterface
+
+2. USER INTERFACE FRAMES
+   - IntroInterface.java: Welcome screen with project information
+   - LoginFrame.java: Unified login interface for all user types
+   - DashboardFrame.java: Admin dashboard with full system management
+   - CompanyAdminFrame.java: Company Admin portal for stock management
+   - TechnicianFrame.java: Technician portal for job management
+   - CustomerPortal.java: Customer portal for service requests
+
+3. OOP IMPLEMENTATION
+   - BaseUser.java: Abstract base class demonstrating inheritance
+   - BaseFrame.java: Abstract base class for frame components
+   - Model classes: Admin, CompanyAdmin, Technician, Customer
+   - Interfaces: Authenticatable, DataManageable
+
+4. DATABASE LAYER
+   - DatabaseConnection.java: Singleton pattern for DB connections
+   - DatabaseInitializer.java: Creates all tables and initializes schema
+   - DAO classes: Data Access Objects for all entities (CRUD operations)
+
+5. UTILITY CLASSES
+   - CSVUtil.java: CSV import/export with UTF-8 BOM support
+   - UIStyles.java: Consistent UI styling across application
+   - UserManager.java: User management and authentication utilities
+
+================================================================================
+DATABASE STRUCTURE
+================================================================================
+
+Database: H2 Embedded Database
+JDBC URL: jdbc:h2:./renewable_energy_hardware;AUTO_SERVER=TRUE
+
+Tables:
+1. admin_accounts              - Admin user accounts
+2. technician_accounts         - Technician accounts (with approval workflow)
+3. company_admin_accounts      - Company admin accounts
+4. customer_accounts           - Customer accounts
+5. sales_orders                - Sales transactions
+6. inventory                   - Inventory items and stock
+7. suppliers                   - Supplier information
+8. maintenance                 - Maintenance requests
+9. stock_requests              - Stock request orders
+10. schedules                  - Delivery and maintenance schedules
+11. stock_arrivals              - Stock arrival records
+12. technician_jobs            - Job assignments for technicians
+13. parts_requests              - Parts requests from technicians
+14. technician_issues           - Technical issue reports
+15. customer_issues            - Customer-reported equipment issues
+
+================================================================================
+USER ROLES AND PERMISSIONS
+================================================================================
+
+1. ADMIN
+   - Full system access and control
+   - Manages inventory, sales, suppliers, maintenance requests
+   - Approves technician applications and stock requests
+   - Assigns technicians to maintenance jobs
+   - Generates reports and analytics
+
+2. COMPANY ADMIN
+   - Manages company-level operations
+   - Creates and tracks stock requests
+   - Monitors delivery and maintenance schedules
+   - Updates stock arrival records
+
+3. TECHNICIAN
+   - Views assigned maintenance jobs
+   - Updates job status and completion
+   - Requests parts and reports technical issues
+   - Requires admin approval for account activation
+
+4. CUSTOMER
+   - Submits maintenance service requests
+   - Reports equipment issues
+   - Tracks request status in real-time
+   - Self-registration without admin approval
+
+================================================================================
+OOP CONCEPTS IMPLEMENTED
+================================================================================
+
+1. ENCAPSULATION
+   - Private fields with public getters/setters in all model classes
+   - BaseUser, Admin, Technician, Customer, CompanyAdmin
+
+2. INHERITANCE
+   - BaseUser → Admin, Technician, Customer, CompanyAdmin
+   - BaseFrame → Frame classes (abstract base for common functionality)
+
+3. POLYMORPHISM
+   - Method overriding: getRole(), displayInfo() in user subclasses
+   - Interface implementation: Authenticatable, DataManageable
+
+4. ABSTRACTION
+   - Abstract class: BaseUser, BaseFrame
+   - Interfaces: Authenticatable, DataManageable
+
+================================================================================
+CORE FUNCTIONALITIES
+================================================================================
+
+1. CRUD OPERATIONS
+   - Create: Add new records to all tables
+   - Read: Query and display all records
+   - Update: Modify existing records
+   - Delete: Remove records from database
+
+2. CSV IMPORT/EXPORT
+   - Export table data to CSV format (UTF-8 BOM for Excel compatibility)
+   - Import data from CSV files
+   - Proper handling of special characters and quoted values
+
+3. AUTHENTICATION SYSTEM
+   - Unified login interface for all user types
+   - Role-based access control
+   - Password hashing and validation
+   - Session management
+
+4. REAL-TIME NOTIFICATIONS
+   - Customer → Admin: Maintenance request notifications
+   - Admin → Technician: Job assignment notifications
+   - Technician → Customer: Job completion notifications
+   - Admin → Company Admin: Stock request approval/rejection
+
+5. SEARCH AND FILTER
+   - Search functionality across all tables
+   - Status-based filtering
+   - Real-time search results
+
+================================================================================
+HOW TO RUN THE APPLICATION
+================================================================================
+
+Prerequisites:
+- Java SE 11 or higher
+- H2 Database JAR (included in lib/ folder)
+
+Steps:
+1. Ensure h2-2.2.224.jar is in the lib/ folder
+2. Compile all Java files:
+   javac -cp "lib/h2-2.2.224.jar" -d bin app/**/*.java
+
+3. Run the application:
+   java -cp "bin;lib/h2-2.2.224.jar" app.Main
+
+Alternative (Windows batch files):
+- run_application.bat
+- run_admin.bat
+- run_customer.bat
+
+Database:
+- Database file: renewable_energy_hardware.mv.db
+- Auto-created on first run
+- Schema initialized automatically via DatabaseInitializer
+
+================================================================================
+KEY FEATURES
+================================================================================
+
+✓ 100% Java Swing GUI (no external GUI libraries)
+✓ Multi-role authentication system
+✓ Complete CRUD operations on all entities
+✓ CSV import/export functionality
+✓ Real-time notifications between portals
+✓ Responsive UI design (adapts to window size)
+✓ Input validation and error handling
+✓ Database persistence with H2
+✓ Modular code structure with proper separation of concerns
+✓ OOP principles demonstrated throughout
+
+================================================================================
+FILE ORGANIZATION
+================================================================================
+
+Package Structure:
+- app/                    - Main application classes
+- app/abstracts/          - Abstract base classes
+- app/interfaces/         - Interface definitions
+- app/model/              - Data model classes
+- app/util/               - Utility classes and DAOs
+
+Design Patterns:
+- Singleton: DatabaseConnection
+- DAO Pattern: All *DAO.java classes
+- MVC Pattern: Separation of Model, View, Controller
+- Factory Pattern: User creation and authentication
+
+================================================================================
+NOTES FOR GITHUB
+================================================================================
+
+This project demonstrates:
+- Object-Oriented Programming principles
+- Java Swing GUI development
+- Database integration with H2
+- File I/O operations (CSV)
+- Enterprise application architecture
+- Multi-user role-based system
+
+For detailed documentation, see PROJECT_DOCUMENTATION.md
+
+================================================================================
+END OF CODE STRUCTURE DOCUMENT
+================================================================================
+
